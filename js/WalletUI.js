@@ -1,6 +1,6 @@
 'use strict';
 
-import { formatPeso, formatDate, iconFor, bankLabel } from './Formatters.js';
+import { formatPeso, formatDate, iconFor, bankLabel, bankBranding } from './formatters.js';
 
 export class WalletUI {
   constructor(store) {
@@ -41,11 +41,17 @@ export class WalletUI {
 
     this.store.accounts.forEach(acc => {
       const balance = acc.getBalance();
+      const branding = bankBranding(acc.bank);
       const card = document.createElement('div');
       card.className = 'account-card';
       card.dataset.id = acc.id;
+
+      const iconHTML = branding
+        ? `<div class="account-icon bank-badge" style="background:${branding.color}22; color:${branding.color}; border-color:${branding.color}44;">${branding.initials}</div>`
+        : `<div class="account-icon">${iconFor(acc.type)}</div>`;
+
       card.innerHTML = `
-        <div class="account-icon">${iconFor(acc.type)}</div>
+        ${iconHTML}
         <div class="account-name">${acc.name}</div>
         <div class="account-balance ${balance < 0 ? 'negative' : ''}">${formatPeso(balance)}</div>
         <div class="account-type-tag">${bankLabel(acc.bank) ? bankLabel(acc.bank) + ' · ' : ''}${acc.type}</div>

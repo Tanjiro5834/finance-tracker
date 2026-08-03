@@ -9,7 +9,7 @@
   --red: #FF5C5C;
   --font-body: 'Inter', sans-serif;
   --font-heading: 'Space Grotesk', sans-serif;
-  --font-mono: 'JetBrains Mono', monospace;
+  --font-mono: 'Inter', monospace;
 }
 
 * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -136,6 +136,14 @@ body {
   font-weight: 700;
   margin-bottom: 12px;
   background: #2A2E37;
+}
+
+.account-icon.bank-badge {
+  font-family: var(--font-heading);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.01em;
+  border: 1px solid;
 }
 
 .account-name {
