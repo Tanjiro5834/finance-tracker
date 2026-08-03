@@ -1,6 +1,6 @@
 'use strict';
 
-import { formatPeso, formatDate, iconFor, bankLabel, bankBranding } from './formatters.js';
+import { formatPeso, formatDate, iconFor, bankLabel, bankBranding } from './Formatters.js';
 
 export class WalletUI {
   constructor(store) {
