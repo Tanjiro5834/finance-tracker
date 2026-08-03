@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Wallet — Net Worth Tracker</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&family=JetBrains+Mono:wght@400;500;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+
+  <div class="app">
+
+    <!-- HERO: Net Worth -->
+    <header class="hero">
+      <div class="hero-top">
+        <span class="hero-label">Total Net Worth</span>
+        <button id="toggleVisibility" class="icon-btn" title="Hide/Show balance">👁</button>
+      </div>
+      <div class="hero-amount" id="netWorthAmount">₱0.00</div>
+      <div class="hero-sub" id="accountCount">0 accounts</div>
+    </header>
+
+    <!-- ACCOUNTS -->
+    <section class="accounts-section">
+      <div class="section-head">
+        <h2>Accounts</h2>
+        <button id="addAccountBtn" class="btn-primary">+ Add Account</button>
+      </div>
+      <div class="accounts-grid" id="accountsGrid">
+        <!-- account cards injected by JS -->
+      </div>
+    </section>
+
+  </div>
+
+  <!-- MODAL: Add Account -->
+  <div class="modal-overlay" id="addAccountModal">
+    <div class="modal">
+      <div class="modal-head">
+        <h3>New Account</h3>
+        <button class="icon-btn" data-close-modal>✕</button>
+      </div>
+      <form id="addAccountForm">
+        <label>Account Name
+          <input type="text" id="accName" placeholder="e.g. BPI Payroll" required>
+        </label>
+        <label>Bank / Provider
+          <select id="accBank">
+            <option value="">— Select bank/provider —</option>
+            <optgroup label="Universal & Commercial Banks">
+              <option value="BDO">BDO Unibank</option>
+              <option value="BPI">Bank of the Philippine Islands (BPI)</option>
+              <option value="Metrobank">Metrobank</option>
+              <option value="Landbank">Landbank</option>
+              <option value="PNB">Philippine National Bank (PNB)</option>
+              <option value="Chinabank">China Bank</option>
+              <option value="RCBC">RCBC</option>
+              <option value="Security Bank">Security Bank</option>
+              <option value="UnionBank">UnionBank</option>
+              <option value="EastWest">EastWest Bank</option>
+              <option value="PSBank">PSBank</option>
+              <option value="DBP">Development Bank of the Philippines (DBP)</option>
+              <option value="Maybank">Maybank Philippines</option>
+              <option value="RobinsonsBank">Robinsons Bank</option>
+            </optgroup>
+            <optgroup label="Digital Banks">
+              <option value="GoTyme">GoTyme Bank</option>
+              <option value="Maya Bank">Maya Bank</option>
+              <option value="Tonik">Tonik Bank</option>
+              <option value="UNO Digital">UNO Digital Bank</option>
+              <option value="UnionDigital">UnionDigital Bank</option>
+              <option value="Overseas Filipino Bank">Overseas Filipino Bank (OFBank)</option>
+            </optgroup>
+            <optgroup label="E-Wallets">
+              <option value="GCash">GCash</option>
+              <option value="Maya">Maya (App)</option>
+              <option value="ShopeePay">ShopeePay</option>
+              <option value="GrabPay">GrabPay</option>
+              <option value="Coins.ph">Coins.ph</option>
+              <option value="PayMaya">PayMaya</option>
+            </optgroup>
+            <optgroup label="Other">
+              <option value="MariBank">MariBank</option>
+              <option value="Cash">Cash (no bank)</option>
+              <option value="Other">Other</option>
+            </optgroup>
+          </select>
+        </label>
+        <label>Starting Balance
+          <input type="number" id="accBalance" placeholder="0.00" step="0.01" required>
+        </label>
+        <label>Type
+          <select id="accType">
+            <option value="wallet">Wallet</option>
+            <option value="savings">Savings</option>
+            <option value="cash">Cash</option>
+            <option value="credit">Credit</option>
+          </select>
+        </label>
+        <button type="submit" class="btn-primary full">Create Account</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- MODAL: Account Detail / Transactions -->
+  <div class="modal-overlay" id="detailModal">
+    <div class="modal modal-lg">
+      <div class="modal-head">
+        <div>
+          <h3 id="detailAccName">Account</h3>
+          <div class="detail-balance" id="detailAccBalance">₱0.00</div>
+        </div>
+        <button class="icon-btn" data-close-modal>✕</button>
+      </div>
+
+      <form id="addTxnForm" class="txn-form">
+        <input type="text" id="txnLabel" placeholder="Label (e.g. Groceries)" required>
+        <input type="number" id="txnAmount" placeholder="Amount" step="0.01" required>
+        <div class="txn-type-toggle">
+          <button type="button" class="txn-type-btn active" data-type="add">+ Add</button>
+          <button type="button" class="txn-type-btn" data-type="minus">− Spend</button>
+        </div>
+        <button type="submit" class="btn-primary full">Log Transaction</button>
+      </form>
+
+      <div class="txn-list" id="txnList">
+        <!-- transactions injected by JS -->
+      </div>
+
+      <button class="btn-danger full" id="deleteAccountBtn">Delete Account</button>
+    </div>
+  </div>
+
+  <script type="module" src="/js/main.js"></script>
+</body>
+</html>
