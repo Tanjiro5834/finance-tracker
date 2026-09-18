@@ -1009,7 +1009,7 @@
       background-color: var(--surface);
       border-top: 1.5px solid var(--border);
       z-index: 150;
-      padding: 8px 12px calc(8px + env(safe-area-inset-bottom));
+      padding: 8px 4px calc(8px + env(safe-area-inset-bottom));
       justify-content: space-around;
       box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.06);
     }
@@ -1019,17 +1019,19 @@
       flex-direction: column;
       align-items: center;
       gap: 2px;
-      padding: 6px 10px;
+      padding: 6px 4px;
       border-radius: 14px;
-      font-size: 0.65rem;
+      font-size: 0.6rem;
       font-weight: 500;
       color: var(--text-tertiary);
       transition: var(--transition);
-      min-width: 56px;
+      min-width: 48px;
+      flex: 1;
+      max-width: 72px;
     }
 
     .tab-item .emoji {
-      font-size: 1.3rem;
+      font-size: 1.2rem;
     }
 
     .tab-item.active {
@@ -1561,7 +1563,7 @@
       </section>
     </main>
 
-    <!-- Bottom tabs (mobile) -->
+    <!-- Bottom tabs (mobile) — NOW INCLUDES SETTINGS -->
     <nav class="bottom-tabs" id="bottomTabs">
       <button class="tab-item active" data-view="home">
         <span class="emoji">🏠</span> Home
@@ -1576,7 +1578,10 @@
         <span class="emoji">🎯</span> Goals
       </button>
       <button class="tab-item" data-view="insights">
-        <span class="emoji">📈</span> More
+        <span class="emoji">📈</span> Insights
+      </button>
+      <button class="tab-item" data-view="settings">
+        <span class="emoji">⚙️</span> Settings
       </button>
     </nav>
 
@@ -2185,7 +2190,7 @@
           settings: document.getElementById('view-settings'),
         };
 
-        // Nav
+        // Nav — now includes bottom tabs with settings
         this.navItems = document.querySelectorAll('.nav-item, .tab-item');
         this.drawer = document.getElementById('drawer');
         this.drawerOverlay = document.getElementById('drawerOverlay');
