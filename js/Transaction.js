@@ -30,8 +30,10 @@ export class Transaction {
   }
 
   static fromJSON(obj) {
-    // backward-compat: old data used `category` (name string) instead of `categoryId`
-    const catId = obj.categoryId || (obj.category ? obj.category.toLowerCase() : 'others');
+    // backward-compat: old data used `category` (capitalized name string, e.g. "Food")
+    // instead of `categoryId` (lowercase id, e.g. "food"). Normalize either case.
+    const raw = obj.categoryId || obj.category || 'others';
+    const catId = raw.toLowerCase().trim();
     const t = new Transaction(obj.label, obj.amount, obj.type, catId, obj.date);
     t.id = obj.id;
     return t;

@@ -248,12 +248,12 @@ button { font-family: inherit; }
 
 .hero-blob {
   position: absolute;
-  top: -60px;
-  right: -60px;
-  width: 180px;
-  height: 180px;
+  top: -90px;
+  right: -90px;
+  width: 200px;
+  height: 200px;
   border-radius: 50%;
-  background: radial-gradient(circle, rgba(61, 220, 151, 0.22) 0%, transparent 70%);
+  background: radial-gradient(circle, rgba(61, 220, 151, 0.18) 0%, transparent 70%);
   pointer-events: none;
 }
 
@@ -390,12 +390,18 @@ button { font-family: inherit; }
   gap: 10px;
   overflow-x: auto;
   padding-bottom: 2px;
+  padding-right: 4px;
   scrollbar-width: none;
+  scroll-snap-type: x proximity;
+  margin: 0 -16px;
+  padding-left: 16px;
+  padding-right: 16px;
 }
 .accounts-strip::-webkit-scrollbar { display: none; }
 
 .accounts-strip .account-card {
   flex: 0 0 128px;
+  scroll-snap-align: start;
 }
 
 .accounts-strip-empty {
@@ -690,11 +696,12 @@ button { font-family: inherit; }
   background: none;
   border: none;
   color: var(--text-faint);
-  font-size: 10.5px;
+  font-size: 9.5px;
   font-weight: 600;
-  padding: 6px 4px;
+  padding: 6px 2px;
   border-radius: 12px;
   cursor: pointer;
+  white-space: nowrap;
   transition: color 0.15s, transform 0.12s var(--ease-spring);
 }
 
