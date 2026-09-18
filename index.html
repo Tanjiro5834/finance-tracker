@@ -5,41 +5,261 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <title>Wallet — Net Worth Tracker</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&family=JetBrains+Mono:wght@400;500;700;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Fredoka:wght@500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="/css/style.css">
 </head>
-<body>
+<body data-theme="dark">
 
-  <div class="app">
+  <div class="bg-mesh"></div>
 
-    <!-- HERO: Net Worth -->
-    <header class="hero">
-      <div class="hero-top">
-        <span class="hero-label">Total Net Worth</span>
-        <button id="toggleVisibility" class="icon-btn" title="Hide/Show balance">👁</button>
+  <div class="shell">
+
+    <!-- SIDEBAR (desktop) -->
+    <nav class="sidebar">
+      <div class="brand">
+        <span class="brand-mark">✦</span>
+        <span class="brand-name">Wallet</span>
       </div>
-      <div class="hero-amount" id="netWorthAmount">₱0.00</div>
-      <div class="hero-sub" id="accountCount">0 accounts</div>
-    </header>
+      <button class="nav-item active" data-view="home"><span class="nav-icon">🏠</span> Home</button>
+      <button class="nav-item" data-view="accounts"><span class="nav-icon">💳</span> Accounts</button>
+      <button class="nav-item" data-view="budget"><span class="nav-icon">🎯</span> Budget</button>
+      <button class="nav-item" data-view="goals"><span class="nav-icon">🏆</span> Goals</button>
+      <button class="nav-item" data-view="insights"><span class="nav-icon">📊</span> Insights</button>
+      <button class="nav-item" data-view="settings"><span class="nav-icon">⚙️</span> Settings</button>
+      <div class="sidebar-spacer"></div>
+      <button class="nav-item nav-theme" id="themeToggleSidebar">
+        <span class="nav-icon" id="themeIconSidebar">🌙</span> <span id="themeLabelSidebar">Dark mode</span>
+      </button>
+      <button class="nav-item nav-cta" id="sidebarAddBtn"><span class="nav-icon">+</span> Add Account</button>
+    </nav>
 
-    <!-- ACCOUNTS -->
-    <section class="accounts-section">
-      <div class="section-head">
-        <h2>Accounts</h2>
-        <button id="addAccountBtn" class="btn-primary">+ Add Account</button>
-      </div>
-      <div class="accounts-grid" id="accountsGrid">
-        <!-- account cards injected by JS -->
-      </div>
-    </section>
+    <!-- MAIN -->
+    <main class="main">
 
+      <!-- VIEW: HOME -->
+      <section class="view active" id="view-home">
+        <header class="hero">
+          <div class="hero-blob"></div>
+          <div class="hero-top">
+            <span class="hero-label">✦ Total Net Worth</span>
+            <div class="hero-top-actions">
+              <button id="toggleVisibility" class="icon-btn" title="Hide/Show balance">👁</button>
+              <button id="themeToggleMobile" class="icon-btn" title="Toggle theme">🌙</button>
+              <button id="settingsMobileBtn" class="icon-btn" title="Settings">⚙️</button>
+            </div>
+          </div>
+          <div class="hero-amount" id="netWorthAmount">₱0.00</div>
+          <div class="hero-sub" id="accountCount">0 accounts</div>
+
+          <div class="hero-stats">
+            <div class="hero-stat">
+              <span class="hero-stat-dot in"></span>
+              <span class="hero-stat-label">In</span>
+              <span class="hero-stat-val" id="totalIn">₱0.00</span>
+            </div>
+            <div class="hero-stat">
+              <span class="hero-stat-dot out"></span>
+              <span class="hero-stat-label">Out</span>
+              <span class="hero-stat-val" id="totalOut">₱0.00</span>
+            </div>
+          </div>
+        </header>
+
+        <div class="month-summary-card">
+          <div class="month-summary-head">
+            <h2 id="monthSummaryLabel">This Month</h2>
+          </div>
+          <div class="month-summary-row">
+            <div class="month-summary-item">
+              <span class="ms-label">Income</span>
+              <span class="ms-val positive" id="monthIncome">₱0.00</span>
+            </div>
+            <div class="month-summary-item">
+              <span class="ms-label">Expenses</span>
+              <span class="ms-val negative" id="monthExpenses">₱0.00</span>
+            </div>
+            <div class="month-summary-item">
+              <span class="ms-label">Net</span>
+              <span class="ms-val" id="monthNet">₱0.00</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="home-grid">
+          <section class="panel">
+            <div class="panel-head">
+              <h2>Accounts</h2>
+              <button class="link-btn" data-goto="accounts">See all →</button>
+            </div>
+            <div class="accounts-strip" id="homeAccountsStrip"></div>
+          </section>
+
+          <section class="panel">
+            <div class="panel-head">
+              <h2>Recent Transactions</h2>
+            </div>
+            <div class="activity-feed" id="activityFeed"></div>
+          </section>
+        </div>
+      </section>
+
+      <!-- VIEW: ACCOUNTS -->
+      <section class="view" id="view-accounts">
+        <div class="view-head">
+          <h1>Accounts</h1>
+          <button id="addAccountBtn" class="btn-primary"><span class="btn-plus">+</span> Add</button>
+        </div>
+        <div class="accounts-grid" id="accountsGrid"></div>
+        <div class="empty-accounts" id="emptyAccounts" hidden>
+          <div class="empty-emoji">🪙</div>
+          <p>No accounts yet — add your first one</p>
+        </div>
+      </section>
+
+      <!-- VIEW: BUDGET -->
+      <section class="view" id="view-budget">
+        <div class="view-head">
+          <h1>Budget</h1>
+          <button id="addBudgetBtn" class="btn-primary"><span class="btn-plus">+</span> Set Budget</button>
+        </div>
+        <div class="budget-list" id="budgetList"></div>
+        <div class="empty-state-block" id="emptyBudgets" hidden>
+          <div class="empty-emoji">🎯</div>
+          <p>No budgets set yet. Set a monthly limit per category to track spending.</p>
+        </div>
+      </section>
+
+      <!-- VIEW: GOALS -->
+      <section class="view" id="view-goals">
+        <div class="view-head">
+          <h1>Savings Goals</h1>
+          <button id="addGoalBtn" class="btn-primary"><span class="btn-plus">+</span> New Goal</button>
+        </div>
+        <div class="goals-grid" id="goalsGrid"></div>
+        <div class="empty-state-block" id="emptyGoals" hidden>
+          <div class="empty-emoji">🏆</div>
+          <p>No savings goals yet. Create one to start tracking progress.</p>
+        </div>
+      </section>
+
+      <!-- VIEW: INSIGHTS -->
+      <section class="view" id="view-insights">
+        <div class="view-head"><h1>Insights</h1></div>
+
+        <section class="panel">
+          <div class="panel-head"><h2>Income vs. Expenses (6mo)</h2></div>
+          <div class="bar-chart" id="incomeExpenseChart"></div>
+        </section>
+
+        <section class="panel">
+          <div class="panel-head"><h2>Balance History (6mo)</h2></div>
+          <div class="line-chart-wrap">
+            <svg class="line-chart" id="balanceChart" viewBox="0 0 300 120" preserveAspectRatio="none"></svg>
+          </div>
+        </section>
+
+        <section class="panel">
+          <div class="panel-head"><h2>Spending by Category</h2></div>
+          <div class="category-bars" id="categoryBars"></div>
+          <div class="empty-insights" id="emptyInsights" hidden>
+            <div class="empty-emoji">📊</div>
+            <p>Log some expenses to see your breakdown</p>
+          </div>
+        </section>
+
+        <section class="panel">
+          <div class="panel-head"><h2>By Account</h2></div>
+          <div class="account-breakdown" id="accountBreakdown"></div>
+        </section>
+      </section>
+
+      <!-- VIEW: SETTINGS -->
+      <section class="view" id="view-settings">
+        <div class="view-head"><h1>Settings</h1></div>
+
+        <section class="panel">
+          <div class="panel-head"><h2>Appearance</h2></div>
+          <div class="settings-row">
+            <span>Theme</span>
+            <div class="theme-switch" id="themeSwitchSettings">
+              <button class="theme-opt active" data-theme="dark">🌙 Dark</button>
+              <button class="theme-opt" data-theme="light">☀️ Light</button>
+            </div>
+          </div>
+        </section>
+
+        <section class="panel">
+          <div class="panel-head">
+            <h2>Categories</h2>
+            <button class="link-btn" id="addCategoryBtn">+ New</button>
+          </div>
+          <div class="category-list" id="categoryList"></div>
+        </section>
+
+        <section class="panel">
+          <div class="panel-head"><h2>Data Management</h2></div>
+          <div class="settings-actions">
+            <button class="btn-secondary full" id="exportBtn">⬇ Export data (JSON)</button>
+            <button class="btn-secondary full" id="importBtn">⬆ Import / restore JSON</button>
+            <input type="file" id="importFileInput" accept="application/json" hidden>
+            <button class="btn-danger full" id="clearAllBtn">🗑 Clear all data</button>
+          </div>
+        </section>
+      </section>
+
+    </main>
+  </div>
+
+  <!-- BOTTOM NAV (mobile) -->
+  <nav class="bottom-nav">
+    <button class="bnav-item active" data-view="home"><span class="bnav-icon">🏠</span><span>Home</span></button>
+    <button class="bnav-item" data-view="accounts"><span class="bnav-icon">💳</span><span>Accounts</span></button>
+    <button class="bnav-item" data-view="budget"><span class="bnav-icon">🎯</span><span>Budget</span></button>
+    <button class="bnav-item" data-view="goals"><span class="bnav-icon">🏆</span><span>Goals</span></button>
+    <button class="bnav-item" data-view="insights"><span class="bnav-icon">📊</span><span>More</span></button>
+  </nav>
+
+  <!-- DETAIL PANEL: Account + Transactions -->
+  <div class="detail-overlay" id="detailOverlay">
+    <div class="detail-panel" id="detailPanel">
+      <div class="detail-panel-head">
+        <button class="icon-btn" id="detailBackBtn">←</button>
+        <div class="detail-panel-title">
+          <h3 id="detailAccName">Account</h3>
+          <div class="detail-balance" id="detailAccBalance">₱0.00</div>
+        </div>
+        <button class="icon-btn" id="detailCloseBtn">✕</button>
+      </div>
+
+      <form id="addTxnForm" class="txn-form">
+        <input type="hidden" id="txnEditId" value="">
+        <input type="text" id="txnLabel" placeholder="Description (e.g. Groceries)" required>
+        <div class="txn-form-row">
+          <input type="number" id="txnAmount" placeholder="Amount" step="0.01" required>
+          <select id="txnCategory"></select>
+        </div>
+        <input type="date" id="txnDate">
+        <div class="txn-type-toggle">
+          <button type="button" class="txn-type-btn active" data-type="add">+ Income</button>
+          <button type="button" class="txn-type-btn" data-type="minus">− Expense</button>
+        </div>
+        <div class="txn-form-actions">
+          <button type="submit" class="btn-primary full" id="txnSubmitBtn">Log Transaction</button>
+          <button type="button" class="btn-ghost full" id="txnCancelEditBtn" hidden>Cancel Edit</button>
+        </div>
+      </form>
+
+      <div class="txn-list" id="txnList"></div>
+
+      <button class="btn-danger full" id="deleteAccountBtn">Delete Account</button>
+    </div>
   </div>
 
   <!-- MODAL: Add Account -->
   <div class="modal-overlay" id="addAccountModal">
     <div class="modal">
       <div class="modal-head">
-        <h3>New Account</h3>
+        <h3>✨ New Account</h3>
         <button class="icon-btn" data-close-modal>✕</button>
       </div>
       <form id="addAccountForm">
@@ -104,34 +324,89 @@
     </div>
   </div>
 
-  <!-- MODAL: Account Detail / Transactions -->
-  <div class="modal-overlay" id="detailModal">
-    <div class="modal modal-lg">
+  <!-- MODAL: Add/Edit Category -->
+  <div class="modal-overlay" id="categoryModal">
+    <div class="modal">
       <div class="modal-head">
-        <div>
-          <h3 id="detailAccName">Account</h3>
-          <div class="detail-balance" id="detailAccBalance">₱0.00</div>
-        </div>
+        <h3 id="categoryModalTitle">✨ New Category</h3>
         <button class="icon-btn" data-close-modal>✕</button>
       </div>
-
-      <form id="addTxnForm" class="txn-form">
-        <input type="text" id="txnLabel" placeholder="Label (e.g. Groceries)" required>
-        <input type="number" id="txnAmount" placeholder="Amount" step="0.01" required>
-        <div class="txn-type-toggle">
-          <button type="button" class="txn-type-btn active" data-type="add">+ Add</button>
-          <button type="button" class="txn-type-btn" data-type="minus">− Spend</button>
-        </div>
-        <button type="submit" class="btn-primary full">Log Transaction</button>
+      <form id="categoryForm">
+        <input type="hidden" id="categoryEditId" value="">
+        <label>Icon (emoji)
+          <input type="text" id="categoryIcon" placeholder="✦" maxlength="4">
+        </label>
+        <label>Name
+          <input type="text" id="categoryName" placeholder="e.g. Subscriptions" required>
+        </label>
+        <button type="submit" class="btn-primary full">Save Category</button>
       </form>
-
-      <div class="txn-list" id="txnList">
-        <!-- transactions injected by JS -->
-      </div>
-
-      <button class="btn-danger full" id="deleteAccountBtn">Delete Account</button>
     </div>
   </div>
+
+  <!-- MODAL: Set Budget -->
+  <div class="modal-overlay" id="budgetModal">
+    <div class="modal">
+      <div class="modal-head">
+        <h3>🎯 Set Budget</h3>
+        <button class="icon-btn" data-close-modal>✕</button>
+      </div>
+      <form id="budgetForm">
+        <label>Category
+          <select id="budgetCategory"></select>
+        </label>
+        <label>Monthly Limit
+          <input type="number" id="budgetLimit" placeholder="0.00" step="0.01" required>
+        </label>
+        <button type="submit" class="btn-primary full">Save Budget</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- MODAL: New/Edit Goal -->
+  <div class="modal-overlay" id="goalModal">
+    <div class="modal">
+      <div class="modal-head">
+        <h3 id="goalModalTitle">🏆 New Savings Goal</h3>
+        <button class="icon-btn" data-close-modal>✕</button>
+      </div>
+      <form id="goalForm">
+        <input type="hidden" id="goalEditId" value="">
+        <label>Goal Name
+          <input type="text" id="goalName" placeholder="e.g. Emergency Fund" required>
+        </label>
+        <label>Target Amount
+          <input type="number" id="goalTarget" placeholder="0.00" step="0.01" required>
+        </label>
+        <label>Current Savings
+          <input type="number" id="goalCurrent" placeholder="0.00" step="0.01" value="0">
+        </label>
+        <label>Target Date (optional)
+          <input type="date" id="goalDate">
+        </label>
+        <button type="submit" class="btn-primary full">Save Goal</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- MODAL: Goal contribution -->
+  <div class="modal-overlay" id="contributeModal">
+    <div class="modal">
+      <div class="modal-head">
+        <h3>💸 Add Contribution</h3>
+        <button class="icon-btn" data-close-modal>✕</button>
+      </div>
+      <form id="contributeForm">
+        <input type="hidden" id="contributeGoalId" value="">
+        <label>Amount to add
+          <input type="number" id="contributeAmount" placeholder="0.00" step="0.01" required>
+        </label>
+        <button type="submit" class="btn-primary full">Add to Goal</button>
+      </form>
+    </div>
+  </div>
+
+  <div class="toast" id="toast"></div>
 
   <script type="module" src="/js/main.js"></script>
 </body>

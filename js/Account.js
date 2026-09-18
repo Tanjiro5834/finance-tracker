@@ -12,10 +12,21 @@ export class Account {
     this.transactions = [];
   }
 
-  addTransaction(label, amount, type) {
-    const txn = new Transaction(label, amount, type);
+  addTransaction(label, amount, type, categoryId = 'others', date = undefined) {
+    const txn = new Transaction(label, amount, type, categoryId, date);
     this.transactions.push(txn);
     return txn;
+  }
+
+  editTransaction(txnId, fields) {
+    const txn = this.transactions.find(t => t.id === txnId);
+    if (!txn) return null;
+    txn.update(fields);
+    return txn;
+  }
+
+  deleteTransaction(txnId) {
+    this.transactions = this.transactions.filter(t => t.id !== txnId);
   }
 
   // Balance = starting balance + sum of all signed transactions
@@ -26,6 +37,10 @@ export class Account {
 
   getSortedTransactions() {
     return [...this.transactions].sort((a, b) => new Date(b.date) - new Date(a.date));
+  }
+
+  getAllTransactionsWithAccount() {
+    return this.transactions.map(t => ({ txn: t, accountId: this.id, accountName: this.name }));
   }
 
   toJSON() {

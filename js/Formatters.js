@@ -11,13 +11,24 @@ export function formatDate(isoString) {
          ' · ' + d.toLocaleTimeString('en-PH', { hour: '2-digit', minute: '2-digit' });
 }
 
+export function formatDateShort(isoString) {
+  const d = new Date(isoString);
+  return d.toLocaleDateString('en-PH', { month: 'short', day: 'numeric', year: 'numeric' });
+}
+
+export function toDateInputValue(isoString) {
+  const d = new Date(isoString);
+  const pad = n => String(n).padStart(2, '0');
+  return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`;
+}
+
+export function monthLabel(year, month) {
+  return new Date(year, month, 1).toLocaleDateString('en-PH', { month: 'short', year: '2-digit' });
+}
+
 export function iconFor(type) {
   const icons = { wallet: '💳', savings: '🏦', cash: '💵', credit: '📇' };
   return icons[type] || '💰';
-}
-
-export function bankLabel(bank) {
-  return bank && bank !== 'Other' ? bank : null;
 }
 
 // Monogram + real brand color per institution (no external logo dependency = no broken images, no hotlink/CORS risk)
@@ -50,6 +61,10 @@ const BANK_BRANDING = {
   'PayMaya':                { initials: 'PM',  color: '#00C56C' },
   'MariBank':               { initials: 'M',   color: '#F5A623' },
 };
+
+export function bankLabel(bank) {
+  return bank && bank !== 'Other' ? bank : null;
+}
 
 export function bankBranding(bank) {
   return BANK_BRANDING[bank] || null;
