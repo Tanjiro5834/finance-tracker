@@ -1486,3 +1486,22 @@ html[data-theme="dark"] select {
   display: block;
   border-radius: 5px;
 }
+
+input[type="date"] {
+  -webkit-appearance: none;
+  appearance: none;
+  display: block;
+  min-width: 0;
+  max-width: 100%;
+  height: 48px;
+  line-height: normal;
+}
+
+input[type="date"]::-webkit-date-and-time-value {
+  text-align: left;
+  margin: 0;
+}
+
+@media (max-width: 900px) {
+  input, select, textarea { font-size: 16px; }
+}
