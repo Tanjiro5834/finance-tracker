@@ -13,6 +13,10 @@ class Formatters {
     }).format(amount);
   }
 
+  static masked(amount) {
+    return Formatters.currency(amount).replace(/\d/g, "*");
+  }
+
   static currencyShort(amount) {
     const abs = Math.abs(amount);
     const sign = amount < 0 ? "-" : "";
@@ -919,8 +923,9 @@ class WalletUI {
     // Net worth
     const netWorth = store.totalNetWorth();
     const heroAmount = document.getElementById("heroNetWorth");
-    heroAmount.textContent = Formatters.currency(netWorth);
-    heroAmount.classList.toggle("blurred", store.hideBalance);
+    heroAmount.textContent = store.hideBalance
+      ? Formatters.masked(netWorth)
+      : Formatters.currency(netWorth);
 
     // Account count
     document.getElementById("heroAccountCount").textContent =
