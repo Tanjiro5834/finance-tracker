@@ -45,7 +45,9 @@ class Formatters {
   }
 
   static todayISO() {
-    return new Date().toISOString().split("T")[0];
+    const d = new Date();
+    d.setMinutes(d.getMinutes() - d.getTimezoneOffset());
+    return d.toISOString().split("T")[0];
   }
 
   static nowISO() {
@@ -132,7 +134,7 @@ class Account {
     SecurityBank: "security-bank.png",
     PNB: "pnb.png",
     CIMB: "cimb.png",
-    CASH: "dollar.png",
+    "CASH (No Bank)": "dollar.png",
   };
 
   static badgeHTML(bank, style = "") {
@@ -640,6 +642,17 @@ class WalletStore {
     return result;
   }
 
+  transactionSum(accountId) {
+    return this.transactions
+      .filter((t) => t.accountId === accountId)
+      .reduce((sum, t) => sum + t.signedAmount, 0);
+  }
+
+  accountBalance(accountId) {
+    const acc = this.getAccount(accountId);
+    return acc ? acc.startingBalance + this.transactionSum(accountId) : 0;
+  }
+
   getSpendingByCategory() {
     const now = new Date();
     const startOfMonth = new Date(now.getFullYear(), now.getMonth(), 1);
@@ -792,6 +805,12 @@ class WalletUI {
     this.addCategoryBtn.addEventListener("click", () =>
       this.openCategoryForm(),
     );
+
+    this.confirmOk.addEventListener("click", () => {
+      const fn = this.pendingConfirm;
+      this.closeConfirm();
+      fn?.();
+    });
 
     // Quick add transaction
     this.quickAddHome.addEventListener("click", () => {
@@ -1567,7 +1586,7 @@ class WalletUI {
 
     this.drawerBody.querySelectorAll(".edit-tx").forEach((btn) => {
       btn.addEventListener("click", () => {
-        this.openTransactionForm(btn.dataset.id);
+        this.openTransactionForm(btn.dataset.id, acc.id);
       });
     });
 
@@ -1605,8 +1624,8 @@ class WalletUI {
             </div>
             <div class="form-row">
               <div class="form-group">
-                <label>Starting balance (₱)</label>
-                <input type="number" id="accBalance" step="0.01" placeholder="0.00" value="${acc ? acc.startingBalance : ""}" required>
+                <label>${isEdit ? "Current balance" : "Starting balance"} (₱)</label>
+                <input type="number" id="accBalance" step="0.01" placeholder="0.00" value="${acc ? this.store.accountBalance(acc.id).toFixed(2) : ""}" required>
               </div>
               <div class="form-group">
                 <label>Type</label>
@@ -1631,12 +1650,9 @@ class WalletUI {
       const type = document.getElementById("accType").value;
 
       if (isEdit) {
-        this.store.updateAccount(editId, {
-          name,
-          bank,
-          startingBalance: balance,
-          type,
-        });
+        const startingBalance = Math.round((balance - this.store.transactionSum(editId)) * 100) / 100;
+
+        this.store.updateAccount(editId, { name, bank, startingBalance, type });
         this.toast("Account updated ✏️");
       } else {
         this.store.addAccount(name, bank, balance, type);
@@ -1978,26 +1994,12 @@ class WalletUI {
   confirm(title, message, onConfirm) {
     this.confirmTitle.textContent = title;
     this.confirmMessage.textContent = message;
+    this.pendingConfirm = onConfirm;
     this.confirmModal.classList.add("open");
-
-    const handler = () => {
-      this.confirmOk.removeEventListener("click", handler);
-      this.confirmCancel.removeEventListener("click", closeHandler);
-      this.confirmModal.classList.remove("open");
-      onConfirm();
-    };
-
-    const closeHandler = () => {
-      this.confirmOk.removeEventListener("click", handler);
-      this.confirmCancel.removeEventListener("click", closeHandler);
-      this.confirmModal.classList.remove("open");
-    };
-
-    this.confirmOk.addEventListener("click", handler);
-    this.confirmCancel.addEventListener("click", closeHandler);
   }
 
   closeConfirm() {
+    this.pendingConfirm = null;
     this.confirmModal.classList.remove("open");
   }
 
@@ -2055,59 +2057,4 @@ document.addEventListener("DOMContentLoaded", () => {
   // Expose for debugging
   window.walletUI = ui;
   window.walletStore = store;
-
-  // Seed sample data if empty (first visit)
-  if (store.accounts.length === 0 && store.transactions.length === 0) {
-    // Add a sample account
-    const acc = store.addAccount("My GCash", "GCash", 2500, "wallet");
-    const acc2 = store.addAccount("BDO Savings", "BDO", 15000, "savings");
-
-    // Sample transactions
-    store.addTransaction(
-      acc.id,
-      "Lunch",
-      185,
-      "food",
-      new Date().toISOString(),
-      "expense",
-    );
-    store.addTransaction(
-      acc.id,
-      "Jeepney fare",
-      13,
-      "transport",
-      new Date().toISOString(),
-      "expense",
-    );
-    store.addTransaction(
-      acc.id,
-      "Allowance",
-      5000,
-      "income",
-      new Date().toISOString(),
-      "income",
-    );
-    store.addTransaction(
-      acc2.id,
-      "Electric bill",
-      1200,
-      "bills",
-      new Date().toISOString(),
-      "expense",
-    );
-
-    // Sample budget
-    store.setBudget("food", 5000);
-    store.setBudget("transport", 2000);
-
-    // Sample goal
-    store.addGoal(
-      "Emergency fund",
-      50000,
-      12000,
-      new Date(new Date().getFullYear() + 1, 0, 1).toISOString(),
-    );
-
-    ui.renderAll();
-  }
 });
